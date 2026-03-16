@@ -27,16 +27,22 @@ public class Etal {
 
 	public String libererEtal() {
 		etalOccupe = false;
-		StringBuilder chaine = new StringBuilder(
+		try {
+			StringBuilder chaine = new StringBuilder(
 				"Le vendeur " + vendeur.getNom() + " quitte son étal, ");
-		int produitVendu = quantiteDebutMarche - quantite;
-		if (produitVendu > 0) {
-			chaine.append(
-					"il a vendu " + produitVendu + " parmi " + produit + ".\n");
-		} else {
-			chaine.append("il n'a malheureusement rien vendu.\n");
+			int produitVendu = quantiteDebutMarche - quantite;
+			if (produitVendu > 0) {
+				chaine.append(
+						"il a vendu " + produitVendu + " parmi " + produit + ".\n");
+			} else {
+				chaine.append("il n'a malheureusement rien vendu.\n");
+			}
+			return chaine.toString();
+		}catch(NullPointerException e) {
+			System.out.println("Il n'y a pas de vendeur sur cet étal.");
+			//e.printStackTrace();
+			return "";
 		}
-		return chaine.toString();
 	}
 
 	public String afficherEtal() {
@@ -48,14 +54,24 @@ public class Etal {
 	}
 
 	public String acheterProduit(int quantiteAcheter, Gaulois acheteur) {
-		if (etalOccupe) {
+		try {
+			if(!etalOccupe) {
+				throw new IllegalStateException("Cet étal n'est point occupé.");
+			}
+			
+			if(quantiteAcheter < 1) {
+				throw new IllegalArgumentException("Il faut une quantité positive à acheter");
+			}
+			
 			StringBuilder chaine = new StringBuilder();
 			chaine.append(acheteur.getNom() + " veut acheter " + quantiteAcheter
 					+ " " + produit + " à " + vendeur.getNom());
+			
 			if (quantite == 0) {
 				chaine.append(", malheureusement il n'y en a plus !");
 				quantiteAcheter = 0;
 			}
+			
 			if (quantiteAcheter > quantite) {
 				chaine.append(", comme il n'y en a plus que " + quantite + ", "
 						+ acheteur.getNom() + " vide l'étal de "
@@ -70,8 +86,12 @@ public class Etal {
 						+ vendeur.getNom() + "\n");
 			}
 			return chaine.toString();
+		}catch(NullPointerException e) {
+			System.out.println("Il n'y a pas de vendeur, le produit ne peut être acheté.");
+			e.printStackTrace();
+			return "";
 		}
-		return null;
+		
 	}
 
 	public boolean contientProduit(String produit) {

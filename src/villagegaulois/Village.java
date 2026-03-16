@@ -45,6 +45,11 @@ public class Village {
 	}
 
 	public String afficherVillageois() {
+		
+		if(chef == null) {
+			throw new VillageSansChefException("Ce village n'a pas de chef !");
+		}
+		
 		StringBuilder chaine = new StringBuilder();
 		if (nbVillageois < 1) {
 			chaine.append("Il n'y a encore aucun habitant au village du chef "
@@ -59,7 +64,7 @@ public class Village {
 		return chaine.toString();
 	}
 	
-	// TP starts here
+	
 	public String installerVendeur(Gaulois vendeur, String produit, int nbProduit) {
 		StringBuilder history = new StringBuilder();
 		history.append(vendeur.getNom() + " cherche un endroit pour vendre " + nbProduit + " "+ produit+".\n");
@@ -88,6 +93,12 @@ public class Village {
 		
 		return history.toString();
 	}
+	
+	
+	
+	
+	
+	
 	
 	public Etal rechercherEtal(Gaulois vendeur) {
 		for(int i=0; i<marche.etals.length; ++i) {
