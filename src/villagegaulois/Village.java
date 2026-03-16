@@ -8,10 +8,12 @@ public class Village {
 	private Chef chef;
 	private Gaulois[] villageois;
 	private int nbVillageois = 0;
+	private Marche marche;
 
-	public Village(String nom, int nbVillageoisMaximum) {
+	public Village(String nom, int nbVillageoisMaximum, int nbEtals) {
 		this.nom = nom;
 		villageois = new Gaulois[nbVillageoisMaximum];
+		marche = new Marche(nbEtals);
 	}
 
 	public String getNom() {
@@ -58,6 +60,55 @@ public class Village {
 	}
 	
 	// TP starts here
+	public String installerVendeur(Gaulois vendeur, String produit, int nbProduit) {
+		StringBuilder history = new StringBuilder();
+		history.append(vendeur.getNom() + " cherche un endroit pour vendre " + nbProduit + " "+ produit+".\n");
+		
+		int indice = marche.trouverEtalLibre();
+		marche.utiliserEtal(indice, vendeur, produit, nbProduit);
+		history.append("Le vendeur " + vendeur.getNom() + " vend des " + produit + " à l'étal n°"+ (indice+1)+".\n");
+		
+		
+		return history.toString();
+	}	
+	
+	public String rechercherVendeursProduit(String produit) {
+		StringBuilder history = new StringBuilder();
+		Etal[] vendeurs = marche.trouverEtals(produit);
+		if(vendeurs == null) {
+			history.append("Il n'y a aucun vendeur qui propose des " + produit + " au marché.\n");
+		}else if(vendeurs.length == 1){
+			history.append("Seul le vendeur " + vendeurs[0].getVendeur().getNom() + " propose des " + produit + " au marché.\n");
+		}else {
+			history.append("Les vendeurs qui proposent des "+ produit+ " sont :\n");
+			for(int i=0; i<vendeurs.length; ++i) {
+				history.append("- "+vendeurs[i].getVendeur().getNom()+"\n");
+			}
+		}
+		
+		return history.toString();
+	}
+	
+	public Etal rechercherEtal(Gaulois vendeur) {
+		for(int i=0; i<marche.etals.length; ++i) {
+			if(marche.etals[i].getVendeur().getNom().equals(vendeur.getNom())) {
+				return marche.etals[i];
+			}
+		}
+		return null;
+	}
+	
+	
+	public String partirVendeur(Gaulois vendeur) {
+		return rechercherEtal(vendeur).libererEtal();
+		
+	}
+	public String afficherMarche() {
+		return marche.afficherMarche();
+	}
+	
+	
+	// Internal Class
 	private static class Marche {
 		private Etal[] etals;
 		public Marche(int nbEtals) {
@@ -68,6 +119,7 @@ public class Village {
 		}
 		
 		private void utiliserEtal(int indiceEtal, Gaulois vendeur, String produit, int nbProduit) {
+			//TODO : vérfier si indiceEtal est bien dans le tableau
 			if(!(etals[indiceEtal].isEtalOccupe())) {
 				etals[indiceEtal].occuperEtal(vendeur, produit, nbProduit);
 			}
@@ -119,7 +171,7 @@ public class Village {
 			return null;
 		}
 		
-		private String afficherMarcher() {
+		private String afficherMarche() {
 			String result = "";
 			int nbEtalsVides = 0;
 			for(int i=0; i<etals.length; ++i) {
