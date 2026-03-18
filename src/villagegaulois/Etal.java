@@ -38,11 +38,13 @@ public class Etal {
 				chaine.append("il n'a malheureusement rien vendu.\n");
 			}
 			return chaine.toString();
+			
 		}catch(NullPointerException e) {
 			System.out.println("Il n'y a pas de vendeur sur cet étal.");
 			//e.printStackTrace();
 			return "";
 		}
+		
 	}
 
 	public String afficherEtal() {

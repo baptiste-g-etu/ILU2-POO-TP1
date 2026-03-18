@@ -70,8 +70,12 @@ public class Village {
 		history.append(vendeur.getNom() + " cherche un endroit pour vendre " + nbProduit + " "+ produit+".\n");
 		
 		int indice = marche.trouverEtalLibre();
-		marche.utiliserEtal(indice, vendeur, produit, nbProduit);
-		history.append("Le vendeur " + vendeur.getNom() + " vend des " + produit + " à l'étal n°"+ (indice+1)+".\n");
+		if(indice >= 0) {
+			marche.utiliserEtal(indice, vendeur, produit, nbProduit);
+			history.append("Le vendeur " + vendeur.getNom() + " vend des " + produit + " à l'étal n°"+ (indice+1)+".\n");
+		}else {
+			history.append("Le vendeur "  + vendeur.getNom() + "n'a pas de place pour s'installer.");
+		}
 		
 		
 		return history.toString();
@@ -80,6 +84,7 @@ public class Village {
 	public String rechercherVendeursProduit(String produit) {
 		StringBuilder history = new StringBuilder();
 		Etal[] vendeurs = marche.trouverEtals(produit);
+		
 		if(vendeurs == null) {
 			history.append("Il n'y a aucun vendeur qui propose des " + produit + " au marché.\n");
 		}else if(vendeurs.length == 1){
@@ -101,12 +106,7 @@ public class Village {
 	
 	
 	public Etal rechercherEtal(Gaulois vendeur) {
-		for(int i=0; i<marche.etals.length; ++i) {
-			if(marche.etals[i].getVendeur().getNom().equals(vendeur.getNom())) {
-				return marche.etals[i];
-			}
-		}
-		return null;
+		return marche.trouverVendeur(vendeur);
 	}
 	
 	
@@ -131,7 +131,7 @@ public class Village {
 		
 		private void utiliserEtal(int indiceEtal, Gaulois vendeur, String produit, int nbProduit) {
 			//TODO : vérfier si indiceEtal est bien dans le tableau
-			if(!(etals[indiceEtal].isEtalOccupe())) {
+			if(!(etals[indiceEtal].isEtalOccupe()) && indiceEtal >= 0 && indiceEtal < etals.length ) {
 				etals[indiceEtal].occuperEtal(vendeur, produit, nbProduit);
 			}
 		}
@@ -183,17 +183,17 @@ public class Village {
 		}
 		
 		private String afficherMarche() {
-			String result = "";
+			StringBuilder result = new StringBuilder();
 			int nbEtalsVides = 0;
 			for(int i=0; i<etals.length; ++i) {
 				if(etals[i].isEtalOccupe()) {
-					result += etals[i].afficherEtal();
+					result.append(etals[i].afficherEtal());
 				}else {
 					++nbEtalsVides;
 				}
 			}
-			result += "Il reste "+ nbEtalsVides + " étals non utilisés dans le marché.";
-			return result;
+			result.append("Il reste "+ nbEtalsVides + " étals non utilisés dans le marché.");
+			return result.toString();
 			
 		}
 		

@@ -40,9 +40,5 @@ public class Scenario {
 		System.out.println(etalFleur.acheterProduit(15, assurancetourix));
 		System.out.println(village.partirVendeur(bonemine));
 		System.out.println(village.afficherMarche());
-		
-		//Exception
-		Etal etalFleur_degrade = village.rechercherEtal(bonemine);
-		System.out.println(etalFleur_degrade.acheterProduit(10, abraracourcix));
 	}
 }
