@@ -84,16 +84,22 @@ public class Village {
 	public String rechercherVendeursProduit(String produit) {
 		StringBuilder history = new StringBuilder();
 		Etal[] vendeurs = marche.trouverEtals(produit);
+		int nbVendeur = vendeurs == null ? 0 : vendeurs.length;  
 		
-		if(vendeurs == null) {
-			history.append("Il n'y a aucun vendeur qui propose des " + produit + " au marché.\n");
-		}else if(vendeurs.length == 1){
-			history.append("Seul le vendeur " + vendeurs[0].getVendeur().getNom() + " propose des " + produit + " au marché.\n");
-		}else {
-			history.append("Les vendeurs qui proposent des "+ produit+ " sont :\n");
-			for(int i=0; i<vendeurs.length; ++i) {
-				history.append("- "+vendeurs[i].getVendeur().getNom()+"\n");
-			}
+		switch (nbVendeur){
+			case 0:
+				history.append("Il n'y a aucun vendeur qui propose des " + produit + " au marché.\n");
+				break;
+			case 1:
+				history.append("Seul le vendeur " + vendeurs[0].getVendeur().getNom() + " propose des " + produit + " au marché.\n");
+				break;
+			default:
+				// If case >= 2
+				history.append("Les vendeurs qui proposent des "+ produit+ " sont :\n");
+				for(int i=0; i<vendeurs.length; ++i) {
+					history.append("- "+vendeurs[i].getVendeur().getNom()+"\n");
+				}
+				break;
 		}
 		
 		return history.toString();

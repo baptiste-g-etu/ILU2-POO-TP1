@@ -32,7 +32,7 @@ public class ScenarioCasDegrade {
 		try {
 			village.afficherVillageois();
 		}catch (VillageSansChefException e) {
-			//System.out.println(e.getMessage());
+			//	System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		
